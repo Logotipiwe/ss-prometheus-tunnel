@@ -6,7 +6,7 @@ services:
     container_name: prometheus-tunnel
     restart: unless-stopped
     volumes:
-      - /root/.ssh/tunnel-rsa:/root/.ssh/id_rsa:ro
+      - ./ssh/tunnel-rsa:/root/.ssh/id_rsa:ro
     command: sh -c "chmod 600 /root/.ssh/id_rsa; apk add --no-cache openssh-client && while true; do ssh -N -L 0.0.0.0:9090:localhost:9090 -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o ExitOnForwardFailure=yes -o StrictHostKeyChecking=no root@172.17.0.1 || sleep 3; done"
 
   prometheus-nginx:

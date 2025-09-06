@@ -9,6 +9,7 @@ mkdir -p ssh
 rm -f ssh/tunnel-rsa ssh/tunnel-rsa.pub
 ssh-keygen -f ssh/tunnel-rsa -N ""
 cat ssh/tunnel-rsa.pub >> ~/.ssh/authorized_keys
+chmod 600 ssh/id_rsa
 
 sudo apt-get install apache2 -y
 sudo htpasswd -bc .htpasswd prometheus-user $1
