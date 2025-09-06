@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  prometheus-tunnel:
+    image: alpine:latest
+    container_name: prometheus-tunnel
+    restart: unless-stopped
+    volumes:
+      - /root/.ssh/tunnel-rsa:/root/.ssh/id_rsa:ro
+    command: sh -c "apk add --no-cache openssh-client && while true; do ssh -N -L 0.0.0.0:9090:localhost:9090 -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o ExitOnForwardFailure=yes -o StrictHostKeyChecking=no root@172.17.0.1 || sleep 3; done"
+
+  prometheus-nginx:
+    image: nginx:latest
+    container_name: prometheus-nginx
+    restart: unless-stopped
+    ports:
+      - "9099:9090"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./.htpasswd:/etc/nginx/htpasswd:ro
